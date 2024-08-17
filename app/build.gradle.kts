@@ -99,10 +99,11 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
     kapt("androidx.room:room-compiler:$roomVersion")
+    implementation (libs.androidx.room.paging)
     implementation(libs.androidx.room.ktx)
     implementation (libs.androidx.runtime)
     implementation("io.coil-kt:coil-compose:2.7.0")
-
-
+    implementation ("androidx.paging:paging-runtime-ktx:3.3.2")
+    implementation ("androidx.paging:paging-compose:3.3.2")
 
 }

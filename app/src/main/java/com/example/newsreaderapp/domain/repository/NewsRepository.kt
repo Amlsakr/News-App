@@ -1,9 +1,10 @@
 package com.example.newsreaderapp.domain.repository
 
-import com.example.newsreaderapp.common.Resource
-import com.example.newsreaderapp.data.model.NewsResponse
+import androidx.paging.PagingData
+import com.example.newsreaderapp.domain.model.Article
+import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
 
-suspend fun getTopHeadLines() : Resource<NewsResponse>
+    fun getTopHeadLines(): Flow<PagingData<Article>>
 }

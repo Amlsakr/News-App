@@ -1,4 +1,4 @@
-package com.example.newsreaderapp.common
+package com.example.newsreaderapp.common.utill
 
 sealed class Resource<T>(
     val data: T? = null,

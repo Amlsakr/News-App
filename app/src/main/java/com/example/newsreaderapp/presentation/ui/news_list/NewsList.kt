@@ -3,7 +3,6 @@ package com.example.newsreaderapp.presentation.ui.news_list
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,11 +31,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.newsreaderapp.R
-import com.example.newsreaderapp.data.model.Article
+import com.example.newsreaderapp.data.sources.remote.model.ArticleDto
+import com.example.newsreaderapp.domain.model.Article
 import com.example.newsreaderapp.presentation.ui.theme.Graay
 
 @Composable
@@ -45,23 +46,28 @@ fun NewsList(
     modifier: Modifier,
     newsListViewModel: NewsListViewModel = hiltViewModel()
 ) {
-    val state = newsListViewModel.state.collectAsStateWithLifecycle()
+    val state = newsListViewModel.newsPagingDataFlow.collectAsLazyPagingItems()
+
+    // val state = newsListViewModel.state.collectAsStateWithLifecycle()
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(state.value.news) { article ->
-                NewsCard(article = article)
+            items(count = state.itemCount, key = state.itemKey { it }) { index ->
+                state[index]?.let { article ->
+                    NewsCard(article = article)
+                }
             }
-        }
-        if (state.value.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
-    }
+//        if (state.value.isLoading) {
+//            CircularProgressIndicator(
+//                modifier = Modifier.align(Alignment.Center)
+//            )
+//        }
 
+        }
+
+    }
 }
 
 @Composable
@@ -108,7 +114,7 @@ fun NewsCard(modifier: Modifier = Modifier, article: Article) {
                 ) {
                 Text(text = article.publishedAt, fontSize = 12.sp, color = Color.Black)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = article.source.name)
+                Text(text = article.source)
 
             }
 

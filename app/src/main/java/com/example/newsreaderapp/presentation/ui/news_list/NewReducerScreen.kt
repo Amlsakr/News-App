@@ -1,7 +1,7 @@
 package com.example.newsreaderapp.presentation.ui.news_list
 
 import androidx.compose.runtime.Immutable
-import com.example.newsreaderapp.data.model.Article
+import com.example.newsreaderapp.data.sources.remote.model.ArticleDto
 import com.example.newsreaderapp.presentation.ui.base.Reducer
 
 class NewReducerScreen :
@@ -10,18 +10,20 @@ class NewReducerScreen :
     @Immutable
     sealed class NewsListEvent : Reducer.ViewEvent {
         data class UpdateNewsLoading(val isLoading: Boolean) : NewsListEvent()
-        data class UpdateNews(val news: List<Article>) : NewsListEvent()
+        data class UpdateNews(val news: List<ArticleDto>) : NewsListEvent()
+        data class UpdateNewsError(val error: String) : NewsListEvent()
 
     }
 
     @Immutable
     sealed class NewsListEffect : Reducer.ViewEffect {
-        data class NavigateToNewsDetails(val news: Article) : NewsListEffect()
+        data class NavigateToNewsDetails(val news: ArticleDto) : NewsListEffect()
     }
 
     data class NewsListState(
         val isLoading: Boolean,
-        val news: List<Article>
+        val news: List<ArticleDto>,
+        val error:String? = null
     ) : Reducer.ViewState
 
     override fun reduce(
@@ -34,6 +36,9 @@ class NewReducerScreen :
             }
             is NewsListEvent.UpdateNews -> {
                 previousState.copy(news = event.news) to null
+            }
+            is NewsListEvent.UpdateNewsError -> {
+                previousState.copy(error = event.error) to null
             }
         }
     }
