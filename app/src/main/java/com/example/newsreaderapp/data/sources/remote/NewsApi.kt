@@ -10,10 +10,14 @@ interface NewsApi {
         const val BASE_URL = "https://newsapi.org/v2/"
     }
 
+    //techcrunch //abc-news
+    //argaam
     @GET("top-headlines")
     suspend fun getTopHeadlines(
-        @Query("sources") country: String = "techcrunch",
+        @Query("country") sources: String = "us",
         @Query("apiKey") apiKey: String = BuildConfig.API_KEY,
-        @Query("page") page: Int = 1,
+        @Query("page") page: Int,
     ): NewsResponse
 }
+
+//@Query("country") country: String = "ua",

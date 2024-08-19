@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.newsreaderapp.data.sources.local.model.ArticleEntity
-import com.example.newsreaderapp.data.sources.remote.model.ArticleDto
+
 
 @Dao
 interface NewsDao {

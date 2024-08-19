@@ -31,13 +31,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.newsreaderapp.R
-import com.example.newsreaderapp.data.sources.remote.model.ArticleDto
 import com.example.newsreaderapp.domain.model.Article
 import com.example.newsreaderapp.presentation.ui.theme.Graay
 
@@ -53,10 +53,21 @@ fun NewsList(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        if (state.loadState.refresh is LoadState.Loading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }else {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(count = state.itemCount, key = state.itemKey { it }) { index ->
+            Log.e("news", "First LazyColumn")
+            Log.e("news", "itemCount${state.itemCount}")
+            items(count = state.itemCount, key = state.itemKey { it.title }) { index ->
+                Log.e("news", "index$index")
                 state[index]?.let { article ->
                     NewsCard(article = article)
+                }
+            }
+            item {
+                if (state.loadState.append is LoadState.Loading) {
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                 }
             }
 //        if (state.value.isLoading) {
@@ -64,8 +75,9 @@ fun NewsList(
 //                modifier = Modifier.align(Alignment.Center)
 //            )
 //        }
-
         }
+        }
+
 
     }
 }
@@ -73,7 +85,7 @@ fun NewsList(
 @Composable
 fun NewsCard(modifier: Modifier = Modifier, article: Article) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(8.dp),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(width = 1.dp, color = Color.Black)
@@ -92,7 +104,7 @@ fun NewsCard(modifier: Modifier = Modifier, article: Article) {
                     .align(Alignment.CenterHorizontally),
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(data = article.urlToImage)
-                    .placeholder(R.drawable.newspaper)
+                    .placeholder(R.drawable.baseline_newspaper_24)
                     .build(),
                 contentDescription = stringResource(R.string.article_image),
                 contentScale = ContentScale.Crop,
@@ -100,7 +112,6 @@ fun NewsCard(modifier: Modifier = Modifier, article: Article) {
                 colorFilter = ColorFilter.colorMatrix(matrix),
                 error = painterResource(id = R.drawable.baseline_newspaper_24)
             )
-            Log.e("image", article.urlToImage.toString())
             Text(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 text = article.title,
@@ -114,7 +125,8 @@ fun NewsCard(modifier: Modifier = Modifier, article: Article) {
                 ) {
                 Text(text = article.publishedAt, fontSize = 12.sp, color = Color.Black)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = article.source)
+                if (!article.source.isNullOrEmpty())
+                Text(text = article.source )
 
             }
 

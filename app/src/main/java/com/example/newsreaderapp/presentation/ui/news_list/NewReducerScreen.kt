@@ -1,7 +1,7 @@
 package com.example.newsreaderapp.presentation.ui.news_list
 
 import androidx.compose.runtime.Immutable
-import com.example.newsreaderapp.data.sources.remote.model.ArticleDto
+import com.example.newsreaderapp.data.sources.remote.model.NewsResponse
 import com.example.newsreaderapp.presentation.ui.base.Reducer
 
 class NewReducerScreen :
@@ -10,19 +10,19 @@ class NewReducerScreen :
     @Immutable
     sealed class NewsListEvent : Reducer.ViewEvent {
         data class UpdateNewsLoading(val isLoading: Boolean) : NewsListEvent()
-        data class UpdateNews(val news: List<ArticleDto>) : NewsListEvent()
+        data class UpdateNews(val news: List<NewsResponse.ArticleDto>) : NewsListEvent()
         data class UpdateNewsError(val error: String) : NewsListEvent()
 
     }
 
     @Immutable
     sealed class NewsListEffect : Reducer.ViewEffect {
-        data class NavigateToNewsDetails(val news: ArticleDto) : NewsListEffect()
+        data class NavigateToNewsDetails(val news: NewsResponse.ArticleDto) : NewsListEffect()
     }
 
     data class NewsListState(
         val isLoading: Boolean,
-        val news: List<ArticleDto>,
+        val news: List<NewsResponse.ArticleDto>,
         val error:String? = null
     ) : Reducer.ViewState
 

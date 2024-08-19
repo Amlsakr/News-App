@@ -1,23 +1,39 @@
 package com.example.newsreaderapp.data.sources.remote.model
 
-data class ArticleDto(
-    val author: String,
-    val content: String,
-    val description: String?,
-    val publishedAt: String,
-    val source: Source,
-    val title: String,
-    val url: String,
-    val urlToImage: String?
-)
+
+import com.google.gson.annotations.SerializedName
 
 data class NewsResponse(
-    val articleDtos: List<ArticleDto>,
+    @SerializedName("articles")
+    val articles: List<ArticleDto>,
+    @SerializedName("status")
     val status: String,
+    @SerializedName("totalResults")
     val totalResults: Int
-)
-
-data class Source(
-    val id: String,
-    val name: String
-)
+) {
+    data class ArticleDto(
+        @SerializedName("author")
+        val author: String,
+        @SerializedName("content")
+        val content: String,
+        @SerializedName("description")
+        val description: String,
+        @SerializedName("publishedAt")
+        val publishedAt: String,
+        @SerializedName("source")
+        val source: Source,
+        @SerializedName("title")
+        val title: String,
+        @SerializedName("url")
+        val url: String,
+        @SerializedName("urlToImage")
+        val urlToImage: String
+    ) {
+        data class Source(
+            @SerializedName("id")
+            val id: String,
+            @SerializedName("name")
+            val name: String
+        )
+    }
+}
