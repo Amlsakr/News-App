@@ -14,10 +14,17 @@ interface NewsApi {
     //argaam
     @GET("top-headlines")
     suspend fun getTopHeadlines(
-        @Query("country") sources: String = "us",
+        @Query("country") country: String = "us",
         @Query("apiKey") apiKey: String = BuildConfig.API_KEY,
         @Query("page") page: Int,
-    ): NewsResponse
+    ): NewsResponse?
+
+    @GET("top-headlines")
+    suspend fun getTopHeadlinesByCategory(
+        @Query("country") country: String = "us",
+        @Query("apiKey") apiKey: String = BuildConfig.API_KEY,
+        @Query("category") category: String ,
+    ): NewsResponse?
 }
 
 //@Query("country") country: String = "ua",
